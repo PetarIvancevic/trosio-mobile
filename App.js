@@ -1,17 +1,27 @@
 import React from 'react'
-import {createStackNavigator} from 'react-navigation'
+import {createDrawerNavigator} from 'react-navigation'
 
 import HomeScreen from './src/screens/Home'
 import LoginScreen from './src/screens/Login'
-import NavigationComponent from './src/components/Navigation'
+import LogoutScreen from './src/screens/Logout'
+import DrawerComponent from './src/components/Drawer'
 
-export default createStackNavigator({
+export default createDrawerNavigator({
   Home: HomeScreen,
-  Login: LoginScreen
+  Login: LoginScreen,
+  Logout: LogoutScreen,
 }, {
   initialRouteName: 'Login',
-  navigationOptions: {
-    headerTitle: <NavigationComponent />,
-    headerMode: 'screen'
-  }
+  drawerPosition: 'right',
+  contentOptions: {
+    activeBackgroundColor: '#efe',
+    activeTintColor: '#e91e63',
+    itemsContainerStyle: {
+      marginVertical: 0,
+    },
+    iconContainerStyle: {
+      opacity: 1
+    }
+  },
+  contentComponent: DrawerComponent,
 })

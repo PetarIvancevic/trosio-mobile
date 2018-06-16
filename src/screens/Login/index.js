@@ -45,7 +45,7 @@ export default class Login extends Component<Props> {
     }
 
     await AsyncStorage.setItem('user', JSON.stringify(user))
-    navigation.replace('Home')
+    navigation.navigate('Home')
   }
 
   async componentWillMount () {
@@ -53,8 +53,11 @@ export default class Login extends Component<Props> {
     const user = JSON.parse(await AsyncStorage.getItem('user'))
 
     if (user) {
-      navigation.replace('Home')
+      navigation.navigate('Home')
     }
+  }
+
+  componentDidMount () {
     this.setState({showSpinner: false})
   }
 
