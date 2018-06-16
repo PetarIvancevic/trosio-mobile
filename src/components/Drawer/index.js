@@ -20,17 +20,25 @@ class DrawerComponent extends Component<Props> {
   constructor (props) {
     super(props)
 
+    this.getDrawerItems = this.getDrawerItems.bind(this)
     this.state = {items: props.items}
   }
 
-  async componentWillMount () {
+  async getDrawerItems () {
     const user = JSON.parse(await AsyncStorage.getItem('user'))
 
-    const updatedDrawerItems = _.filter(
+    return _.filter(
       this.props.items,
       user ? removeLoginRoute : justShowLoginRoute
     )
-    this.setState({items: updatedDrawerItems})
+  }
+
+  async componentWillMount () {
+    this.setState({items: await this.getDrawerItems()})
+  }
+
+  async componentWillUpdate () {
+    this.setState({items: await this.getDrawerItems()})
   }
 
   render () {
