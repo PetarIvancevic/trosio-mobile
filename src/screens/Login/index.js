@@ -1,8 +1,10 @@
+import _ from 'lodash'
 import React, {Component} from 'react'
 import {GoogleSignin, GoogleSigninButton} from 'react-native-google-signin'
 import {ActivityIndicator, AsyncStorage, Text, View} from 'react-native'
 
 import consts from '../../consts'
+import fetch from '../../utils/fetch'
 import styles from './styles'
 import styleVars from '../../styles/variables'
 
@@ -28,6 +30,14 @@ export default class Login extends Component<Props> {
     }
   }
 
+  async createUserIfDoesNotExist (body) {
+    return fetch({
+      url: 'user',
+      body,
+      method: 'POST',
+    })
+  }
+
   async googleLogin () {
     const {checkGooglePlayServices} = this
     const {navigation} = this.props
@@ -44,6 +54,11 @@ export default class Login extends Component<Props> {
       console.error(e)
     }
 
+    try {
+      await this.createUserIfDoesNotExist(_.pick(user, ['email', 'id', 'name']))
+    } catch (err) {
+      console.error('EVO ERROR BOKTE', err)
+    }
     await AsyncStorage.setItem('user', JSON.stringify(user))
     navigation.navigate('Home')
   }
@@ -57,8 +72,8 @@ export default class Login extends Component<Props> {
     }
   }
 
-  componentDidMount () {
-    this.setState({showSpinner: false})
+  async componentDidMount () {
+    this.setState({showSpinner: !!JSON.parse(await AsyncStorage.getItem('user'))})
   }
 
   render() {

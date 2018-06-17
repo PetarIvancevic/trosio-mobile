@@ -25,10 +25,20 @@ class DrawerComponent extends Component<Props> {
   }
 
   async getDrawerItems () {
+    const initialDrawerItemKeys = [
+      'Home',
+      'Login',
+      'Logout'
+    ]
+
     const user = JSON.parse(await AsyncStorage.getItem('user'))
 
+    const initialDrawerItems = _.filter(this.props.items, function (item) {
+      return _.includes(initialDrawerItemKeys, item.key)
+    })
+
     return _.filter(
-      this.props.items,
+      initialDrawerItems,
       user ? removeLoginRoute : justShowLoginRoute
     )
   }

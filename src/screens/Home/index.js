@@ -1,14 +1,35 @@
 import React, {Component} from 'react'
-import {Text, View} from 'react-native'
+import {Button, Text, TouchableOpacity, View} from 'react-native'
 
+import fetch from '../../utils/fetch'
 import styles from './styles'
 
-export default class Home extends Component<Props> {
+class Home extends Component<Props> {
+  constructor () {
+    super()
+
+    this.mainNavigator = this.mainNavigator.bind(this)
+  }
+
+  mainNavigator (route) {
+    const {navigation} = this.props
+
+    return function () {
+      navigation.navigate(route)
+    }
+  }
+
   render () {
     return (
       <View style={styles.body}>
-        <Text>Home screen!</Text>
+        <Button
+          onPress={this.mainNavigator('WalletCreate')}
+          color="#841584"
+          title={'Create Wallet'}
+        />
       </View>
     )
   }
 }
+
+export default Home
