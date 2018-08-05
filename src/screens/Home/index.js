@@ -27,6 +27,11 @@ class Home extends Component<Props> {
           color="#841584"
           title={'Create Wallet'}
         />
+        <Button
+          onPress={this.mainNavigator('CategoryHome')}
+          color="#841584"
+          title={'Categories'}
+        />
       </View>
     )
   }

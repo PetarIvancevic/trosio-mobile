@@ -1,3 +1,4 @@
+import _ from 'lodash'
 import React, {Component} from 'react'
 import {
   Button,
@@ -8,102 +9,53 @@ import {
   View
 } from 'react-native'
 
-import PayDayComponent from '../../../components/PayDay'
-
-// import styles from './styles'
+import styles from './styles'
+import fetch from '../../../utils/fetch'
+import WalletForm from '../../../forms/Wallet'
 
 class WalletCreate extends Component<Props> {
   constructor (props) {
     super(props)
 
-    this.updatePayDay = this.updatePayDay.bind(this)
+    this.submit = this.submit.bind(this)
 
-    this.state = {
-      walletCurrency: '',
-      walletInitialAmount: '0',
-      walletName: '',
-      walletPayAmount: '0',
-      walletPayDay: '1',
+    this.state = {isSubmiting: false}
+  }
+
+  async submit (data) {
+    let error, response
+    await this.setState({isSubmiting: true})
+
+    try {
+      response = await fetch({
+        url: 'wallet',
+        body: {
+          ..._.omit(data, ['error']),
+          amount: _.toNumber(data.amount),
+          currency: _.toNumber(data.currency),
+          initialAmount: _.toNumber(data.initialAmount),
+          paycheckDay: _.toNumber(data.paycheckDay),
+        },
+        method: 'POST',
+      })
+
+      if (!_.get(response, 'error')) {
+        return this.props.navigation.navigate('Home')
+      }
+      error = _.get(response, 'data')
+    } catch (err) {
+      error = err
     }
-  }
-
-  updatePayDay (day, index) {
-    this.setState({walletPayDay: day})
-  }
-
-  submit () {
-
+    this.setState({isSubmiting: false})
   }
 
   render () {
     return (
-      <View>
-        <View>
-          <Text>
-            Create Wallet
-          </Text>
-        </View>
-
-        <View>
-          <Text>
-            Name:
-          </Text>
-          <TextInput
-            style={{height: 40}}
-            placeholder="Name..."
-            onChangeText={(walletName) => this.setState({walletName})}
-          />
-        </View>
-
-        <View>
-          <Text>
-            Currency:
-          </Text>
-          <Picker
-            selectedValue={this.state.walletCurrency}
-            style={{ height: 50, width: 100 }}
-            onValueChange={(itemValue, itemIndex) => this.setState({walletCurrency: itemValue})}>
-            <Picker.Item label="Euro" value="DOL" />
-            <Picker.Item label="Dollar" value="EUR" />
-            <Picker.Item label="Kuna" value="KN" />
-          </Picker>
-        </View>
-
-        <View>
-          <Text>
-            Initial wallet amount:
-          </Text>
-          <TextInput
-            keyboardType='numeric'
-            onChangeText={(walletInitialAmount)=> this.setState({walletInitialAmount})}
-            value={this.state.myNumber}
-          />
-        </View>
-
-        <PayDayComponent
-          updateStateFn={this.updatePayDay}
-          walletPayDay={this.state.walletPayDay}
-        />
-
-        <View>
-          <Text>
-            Pay amount:
-          </Text>
-          <TextInput
-            keyboardType='numeric'
-            onChangeText={(walletPayAmount)=> this.setState({walletPayAmount})}
-            value={this.state.myNumber}
-          />
-        </View>
-
-        <View>
-          <Button
-            onPress={this.submit}
-            color="#841584"
-            title={'Create Wallet'}
-          />
-        </View>
-      </View>
+      <WalletForm
+        formTitle="Create Wallet"
+        isSubmiting={this.state.isSubmiting}
+        submitFn={this.submit}
+      />
     )
   }
 }

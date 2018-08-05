@@ -29,7 +29,7 @@ class PayDay extends Component<Props> {
           Wallet payday:
         </Text>
         <Picker
-          selectedValue={this.props.walletPayDay}
+          selectedValue={this.props.selectedPayCheckDay}
           style={this.props.style}
           onValueChange={this.props.updateStateFn}>
           {this.renderPaydays()}

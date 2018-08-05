@@ -46,7 +46,7 @@ export default class Login extends Component<Props> {
     await GoogleSignin.configure({
       offlineAccess: true // if you want to access Google API on behalf of the user FROM YOUR SERVER
     })
-    let user
+    let user = {}
 
     try {
       user = await GoogleSignin.signIn()
@@ -55,10 +55,18 @@ export default class Login extends Component<Props> {
     }
 
     try {
-      await this.createUserIfDoesNotExist(_.pick(user, ['email', 'id', 'name']))
+      user.token = _.get(
+        await this.createUserIfDoesNotExist(_.pick(user, ['email', 'id', 'name'])),
+        'data.token'
+      )
     } catch (err) {
-      console.error('EVO ERROR BOKTE', err)
+      console.error(err)
     }
+
+    if (!user.token) {
+      return navigation.navigate('ErrorPage')
+    }
+
     await AsyncStorage.setItem('user', JSON.stringify(user))
     navigation.navigate('Home')
   }
