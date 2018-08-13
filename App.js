@@ -1,24 +1,27 @@
 import React from 'react'
 import {createDrawerNavigator} from 'react-navigation'
 
-import CategoryHome from './src/screens/Category'
+import CategoryHomeScreen from './src/screens/Category'
+import CategoryShow from './src/screens/Category/show'
 import CategoryParentForm from './src/screens/Category/form'
-
 import ErrorPage from './src/screens/Error'
 import HomeScreen from './src/screens/Home'
 import LoginScreen from './src/screens/Login'
 import LogoutScreen from './src/screens/Logout'
 import DrawerComponent from './src/components/Drawer'
-import WalletCreateScreen from './src/screens/Wallet/create'
+import WalletParentForm from './src/screens/Wallet/form'
+import WalletHome from './src/screens/Wallet'
 
 export default createDrawerNavigator({
-  ErrorPage: ErrorPage,
-  CategoryHome: CategoryHome,
-  CategoryParentForm: CategoryParentForm,
   Home: HomeScreen,
+  Categories: CategoryHomeScreen,
+  CategoryParentForm: CategoryParentForm,
+  CategoryShow: CategoryShow,
+  ErrorPage: ErrorPage,
+  Wallets: WalletHome,
   Login: LoginScreen,
   Logout: LogoutScreen,
-  WalletCreate: WalletCreateScreen,
+  WalletParentForm: WalletParentForm,
 }, {
   initialRouteName: 'Login',
   drawerPosition: 'right',

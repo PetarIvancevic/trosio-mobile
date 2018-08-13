@@ -4,18 +4,18 @@ import {Button, FlatList, Text, TouchableOpacity, View} from 'react-native'
 import fetch from '../../utils/fetch'
 import styles from './styles'
 
-class CategoryHome extends Component<Props> {
-  constructor () {
-    super()
+class WalletHome extends Component<Props> {
+  constructor (props) {
+    super(props)
 
     this.mainNavigator = this.mainNavigator.bind(this)
     this.renderItemFn = this.renderItemFn.bind(this)
-    this.state = {categories: []}
+    this.state = {wallets: []}
   }
 
   async componentDidMount () {
-    const {data: categories} = await fetch.get('category')
-    this.setState({categories: categories || []})
+    const {data: wallets} = await fetch.get('wallet')
+    this.setState({wallets: wallets || []})
   }
 
   mainNavigator (route, params = {}) {
@@ -27,15 +27,15 @@ class CategoryHome extends Component<Props> {
   }
 
   renderItemFn (listItem) {
-    const category = listItem.item
+    const wallet = listItem.item
     return (
-      <TouchableOpacity onPress={this.mainNavigator('CategoryShow', {categoryId: category.id})}>
+      <TouchableOpacity onPress={this.mainNavigator('WalletShow', {walletId: wallet.id})}>
         <View>
           <Text style={{
             fontSize: 20,
             lineHeight: 30
           }}>
-            {category.name}
+            {wallet.name}
           </Text>
         </View>
       </TouchableOpacity>
@@ -46,14 +46,14 @@ class CategoryHome extends Component<Props> {
     return (
       <View style={styles.body}>
         <Button
-          onPress={this.mainNavigator('CategoryParentForm')}
+          onPress={this.mainNavigator('WalletParentForm')}
           color="#841584"
-          title={'Create Category'}
+          title={'Create Wallet'}
         />
-        {this.state.categories.length === 0 ?
+        {this.state.wallets.length === 0 ?
           <Text style={{fontSize: 20}}>Loading...</Text> :
           <FlatList
-            data={this.state.categories}
+            data={this.state.wallets}
             renderItem={this.renderItemFn}
           />
         }
@@ -62,4 +62,4 @@ class CategoryHome extends Component<Props> {
   }
 }
 
-export default CategoryHome
+export default WalletHome

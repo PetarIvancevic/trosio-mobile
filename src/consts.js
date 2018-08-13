@@ -4,8 +4,25 @@ const msgs = {
   }
 }
 
+const errors = {
+  messages: {
+    'any.default': 'There was an error',
+    category: {
+      duplicate: 'Category name already taken',
+      name: {
+        'string.max': 'Name to large',
+        'string.min': 'Name must be at least two characters long'
+      }
+    }
+  },
+  validation: {
+
+  }
+}
+
 const consts = {
-  msgs
+  msgs,
+  errors,
 }
 
 export default consts

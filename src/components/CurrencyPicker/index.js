@@ -16,9 +16,9 @@ class CurrencyPicker extends Component<Props> {
           selectedValue={this.props.selectedCurrency}
           style={{height: 50, width: 100}}
           onValueChange={this.props.updateStateFn}>
-          <Picker.Item label="Euro" value="10" />
-          <Picker.Item label="Kuna" value="20" />
-          <Picker.Item label="Dollar" value="30" />
+          <Picker.Item key='01' label="Euro" value="10" />
+          <Picker.Item key='02' label="Kuna" value="20" />
+          <Picker.Item key='03' label="Dollar" value="30" />
         </Picker>
       </View>
     )

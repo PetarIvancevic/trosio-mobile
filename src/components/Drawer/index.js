@@ -28,6 +28,8 @@ class DrawerComponent extends Component<Props> {
     const initialDrawerItemKeys = [
       'Home',
       'Login',
+      'Categories',
+      'Wallets',
       'Logout'
     ]
 

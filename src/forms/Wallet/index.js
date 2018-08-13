@@ -10,35 +10,32 @@ import {
   View
 } from 'react-native'
 
-import styles from './styles'
-import styleVars from '../../styles/variables'
+import CategoryPicker from '../../components/CategoryPicker'
 import CurrencyPicker from '../../components/CurrencyPicker'
 import PayDayComponent from '../../components/PayDay'
+import styles from './styles'
+import styleVars from '../../styles/variables'
 
 class WalletForm extends Component<Props> {
   constructor (props) {
     super(props)
 
     this.submit = this.submit.bind(this)
-    this.updateCurrency = this.updateCurrency.bind(this)
-    this.updatePayDay = this.updatePayDay.bind(this)
+    this.updateStateFn = this.updateStateFn.bind(this)
 
     this.state = {
-      amount: _.get(props, 'defaultValues.amount', '0'),
-      currency: _.get(props, 'defaultValues.currency', '10'),
-      initialAmount: _.get(props, 'defaultValues.initialAmount', '0'),
-      name: _.get(props, 'defaultValues.name', ''),
-      paycheckDay: _.get(props, 'defaultValues.paycheckDay', '1'),
+      currency: '10',
+      balance: '0',
+      name: '',
+      paycheckAmount: '0',
+      paycheckDay: '1',
     }
   }
 
-  updatePayDay (paycheckDay, index) {
-    this.setState({paycheckDay})
-  }
-
-  updateCurrency (currency, index) {
-    console.log('selected', currency)
-    this.setState({currency})
+  updateStateFn (stateProperty) {
+    return (value) => {
+      this.setState({[stateProperty]: value})
+    }
   }
 
   submit () {
@@ -69,40 +66,46 @@ class WalletForm extends Component<Props> {
           <TextInput
             style={{height: 40}}
             placeholder='Name...'
-            onChangeText={(name) => this.setState({name})}
+            onChangeText={this.updateStateFn('name')}
             value={this.state.name}
           />
         </View>
 
+        <CategoryPicker
+          selectedCategory={this.state.categoryId}
+          categories={this.props.categories}
+          updateStateFn={this.updateStateFn('categoryId')}
+        />
+
         <CurrencyPicker
           selectedCurrency={this.state.currency}
-          updateStateFn={this.updateCurrency}
+          updateStateFn={this.updateStateFn('currency')}
         />
 
         <View>
           <Text>
-            Initial wallet amount:
+            Wallet initial balance:
           </Text>
           <TextInput
             keyboardType='numeric'
-            onChangeText={(initialAmount)=> this.setState({initialAmount})}
-            value={this.state.initialAmount}
+            onChangeText={this.updateStateFn('balance')}
+            value={this.state.balance}
           />
         </View>
 
         <PayDayComponent
           selectedPayCheckDay={this.state.paycheckDay}
-          updateStateFn={this.updatePayDay}
+          updateStateFn={this.updateStateFn('paycheckDay')}
         />
 
         <View>
           <Text>
-            Pay amount:
+            Paycheck amount:
           </Text>
           <TextInput
             keyboardType='numeric'
-            onChangeText={(amount)=> this.setState({amount})}
-            value={this.state.amount}
+            onChangeText={this.updateStateFn('paycheckAmount')}
+            value={this.state.paycheckAmount}
           />
         </View>
 

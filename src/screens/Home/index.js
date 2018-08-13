@@ -23,12 +23,12 @@ class Home extends Component<Props> {
     return (
       <View style={styles.body}>
         <Button
-          onPress={this.mainNavigator('WalletCreate')}
+          onPress={this.mainNavigator('Wallets')}
           color="#841584"
-          title={'Create Wallet'}
+          title={'Wallets'}
         />
         <Button
-          onPress={this.mainNavigator('CategoryHome')}
+          onPress={this.mainNavigator('Categories')}
           color="#841584"
           title={'Categories'}
         />

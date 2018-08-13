@@ -9,8 +9,9 @@ import {
   View
 } from 'react-native'
 
-  import fetch from '../../../utils/fetch'
 import CategoryForm from '../../../forms/Category'
+import errUtils from '../../../utils/error'
+import fetch from '../../../utils/fetch'
 
 class CategoryParentForm extends Component<Props> {
   constructor (props) {
@@ -19,8 +20,8 @@ class CategoryParentForm extends Component<Props> {
     this.submit = this.submit.bind(this)
 
     this.state = {
-      categoryId: null,
       data: {},
+      errors: {},
       isSubmiting: false
     }
   }
@@ -29,42 +30,51 @@ class CategoryParentForm extends Component<Props> {
     const {navigation} = this.props
     const categoryId = navigation.getParam('categoryId')
 
-    await this.setState({categoryId})
-    const {data: categoryData} = await fetch({
-      url: `category/${categoryId}`,
-      method: 'GET',
-    })
-    await this.setState({data: categoryData})
+    if (categoryId) {
+      await this.setState({categoryId})
+      const {data: categoryData} = await fetch.get(`category/${categoryId}`)
+      await this.setState({data: categoryData})
+    }
   }
 
   async submit (data) {
-    const {categoryId} = this.state
-    let error, response
+    const {navigation} = this.props
     await this.setState({isSubmiting: true})
 
+    const categoryId = navigation.getParam('categoryId')
+
+    const requestData = categoryId ? {
+      method: 'put',
+      url: `category/${categoryId}`,
+    } : {
+      method: 'post',
+      url: 'category',
+    }
+
     try {
-      response = await fetch({
-        url: categoryId ? `category/${categoryId}` : 'category',
-        body: {name: data.name},
-        method: categoryId ? 'PUT' : 'POST',
-      })
+      const response = await fetch[requestData.method](requestData.url, {name: data.name})
 
       if (!_.get(response, 'error')) {
-        return this.props.navigation.navigate('CategoryHome')
+        return this.props.navigation.navigate('Categories')
       }
-      error = _.get(response, 'data')
+      await this.setState({errors: errUtils.parseErrors(response)})
     } catch (err) {
-      error = err
+      console.error(err)
     }
     this.setState({isSubmiting: false})
   }
 
   render () {
+    const {navigation} = this.props
+    const categoryId = navigation.getParam('categoryId')
+
     return (
       <CategoryForm
+        errors={this.state.errors}
         data={this.state.data}
-        btnText="Create"
-        formTitle="Create Category"
+        isUpdate={!!categoryId}
+        btnText={categoryId ? 'Update' : 'Create'}
+        formTitle={`${categoryId ? 'Update' : 'Create'} Category`}
         isSubmiting={this.state.isSubmiting}
         submitFn={this.submit}
       />

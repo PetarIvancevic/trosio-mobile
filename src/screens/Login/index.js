@@ -2,6 +2,7 @@ import _ from 'lodash'
 import React, {Component} from 'react'
 import {GoogleSignin, GoogleSigninButton} from 'react-native-google-signin'
 import {ActivityIndicator, AsyncStorage, Text, View} from 'react-native'
+import {GOOGLE_CLIENT_ID} from 'react-native-dotenv'
 
 import consts from '../../consts'
 import fetch from '../../utils/fetch'
@@ -31,11 +32,7 @@ export default class Login extends Component<Props> {
   }
 
   async createUserIfDoesNotExist (body) {
-    return fetch({
-      url: 'user',
-      body,
-      method: 'POST',
-    })
+    return fetch.post('user', body)
   }
 
   async googleLogin () {
@@ -44,7 +41,8 @@ export default class Login extends Component<Props> {
 
     await checkGooglePlayServices()
     await GoogleSignin.configure({
-      offlineAccess: true // if you want to access Google API on behalf of the user FROM YOUR SERVER
+      webClientId: GOOGLE_CLIENT_ID,
+      offlineAccess: false
     })
     let user = {}
 
@@ -56,7 +54,7 @@ export default class Login extends Component<Props> {
 
     try {
       user.token = _.get(
-        await this.createUserIfDoesNotExist(_.pick(user, ['email', 'id', 'name'])),
+        await this.createUserIfDoesNotExist(_.pick(user, ['idToken'])),
         'data.token'
       )
     } catch (err) {

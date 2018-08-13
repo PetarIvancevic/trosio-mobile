@@ -10,8 +10,11 @@ import {
   View
 } from 'react-native'
 
+import consts from '../../consts'
 import styles from './styles'
 import styleVars from '../../styles/variables'
+import TextInputComponent from '../../components/TextInput'
+import TouchableContent from '../../components/TouchableContent'
 
 class CategoryForm extends Component<Props> {
   constructor (props) {
@@ -19,6 +22,7 @@ class CategoryForm extends Component<Props> {
 
     this.submit = this.submit.bind(this)
     this.state = {
+      loadedData: false,
       name: '',
     }
   }
@@ -29,47 +33,52 @@ class CategoryForm extends Component<Props> {
 
   componentWillReceiveProps (nextProps) {
     if (!_.isEmpty(nextProps.data) && !this.state.name) {
-      this.setState({name: nextProps.data.name})
+      this.setState({name: nextProps.data.name, loadedData: true})
     }
   }
 
   render () {
-    if (this.props.isSubmiting) {
+    const {isSubmiting, isUpdate} = this.props
+    const isLoadingData = isUpdate && !this.state.name && !this.state.loadedData
+
+    if (isSubmiting || isLoadingData) {
       return (
         <View style={styles.spinnerContainer}>
           <ActivityIndicator size={80} color={styleVars.color.white} />
         </View>
       )
     }
-    console.log('evo mi state', this.state)
 
     return (
-      <View>
+      <View style={styles.body}>
         <View>
-          <Text>
+          <Text style={styles.formHeading}>
             {this.props.formTitle}
           </Text>
         </View>
 
-        <View>
-          <Text>
-            Name:
-          </Text>
-          <TextInput
-            style={{height: 40}}
-            placeholder='Name...'
-            onChangeText={(name) => this.setState({name})}
-            value={this.state.name}
-          />
-        </View>
+        <TextInputComponent
+          errorMsg={consts.errors.messages.category.name[_.get(this.props.errors, 'name')]}
+          inputName='Name'
+          placeholder='Category name...'
+          updateStateFn={(name) => this.setState({name})}
+          value={this.state.name}
+        />
 
         <View>
-          <Button
-            onPress={this.submit}
-            color="#841584"
-            title={this.props.btnText}
-          />
+          <Text style={styles.errorText}>
+            {_.get(consts.errors.messages, this.props.errors)}
+          </Text>
         </View>
+
+        <TouchableContent
+          onPressFn={this.submit}
+          content={
+            <View style={styles.buttonContainer}>
+              <Text style={styles.buttonStyle}>{this.props.btnText}</Text>
+            </View>
+          }
+        />
       </View>
     )
   }
