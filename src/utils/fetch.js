@@ -29,5 +29,5 @@ export default {
   get: fetchFn('GET'),
   post: fetchFn('POST'),
   put: fetchFn('PUT'),
-  remove: fetchFn('DELETE')
+  delete: fetchFn('DELETE')
 }

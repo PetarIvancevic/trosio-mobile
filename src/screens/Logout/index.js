@@ -9,6 +9,8 @@ import {GoogleSignin} from 'react-native-google-signin'
 import styles from './styles'
 import styleVars from '../../styles/variables'
 
+import LoadingScreen from '../LoadingScreen'
+
 export default class Home extends Component<Props> {
   async componentWillMount () {
     const {navigation} = this.props
@@ -16,14 +18,10 @@ export default class Home extends Component<Props> {
     await GoogleSignin.configure({})
     await AsyncStorage.removeItem('user')
     await GoogleSignin.signOut()
-    navigation.navigate('Login')
+    return navigation.navigate('Login')
   }
 
   render () {
-    return (
-      <View style={styles.spinnerContainer}>
-        <ActivityIndicator size={80} color={styleVars.color.white} />
-      </View>
-    )
+    return <LoadingScreen />
   }
 }

@@ -1,13 +1,7 @@
-const errorColor = '#fc533a'
-
 const variables = {
-  error: {
-    fontWeight: '700',
-    color: errorColor
-  },
   color: {
     appBg: '#750099',
-    error: errorColor,
+    error: '#fc533a',
     white: '#fff'
   },
   size: {

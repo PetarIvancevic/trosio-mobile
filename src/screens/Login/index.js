@@ -9,6 +9,8 @@ import fetch from '../../utils/fetch'
 import styles from './styles'
 import styleVars from '../../styles/variables'
 
+import LoadingScreen from '../LoadingScreen'
+
 export default class Login extends Component<Props> {
   constructor (props) {
     super(props)
@@ -39,6 +41,8 @@ export default class Login extends Component<Props> {
     const {checkGooglePlayServices} = this
     const {navigation} = this.props
 
+    await this.setState({showSpinner: true})
+
     await checkGooglePlayServices()
     await GoogleSignin.configure({
       webClientId: GOOGLE_CLIENT_ID,
@@ -50,6 +54,7 @@ export default class Login extends Component<Props> {
       user = await GoogleSignin.signIn()
     } catch (e) {
       console.error(e)
+      await this.setState({showSpinner: false})
     }
 
     try {
@@ -59,6 +64,7 @@ export default class Login extends Component<Props> {
       )
     } catch (err) {
       console.error(err)
+      await this.setState({showSpinner: false})
     }
 
     if (!user.token) {
@@ -69,17 +75,15 @@ export default class Login extends Component<Props> {
     navigation.navigate('Home')
   }
 
-  async componentWillMount () {
+  async componentDidMount () {
     const {navigation} = this.props
     const user = JSON.parse(await AsyncStorage.getItem('user'))
 
     if (user) {
-      navigation.navigate('Home')
+      return navigation.navigate('Home')
     }
-  }
 
-  async componentDidMount () {
-    this.setState({showSpinner: !!JSON.parse(await AsyncStorage.getItem('user'))})
+    await this.setState({showSpinner: false})
   }
 
   render() {
@@ -87,11 +91,7 @@ export default class Login extends Component<Props> {
     const {showSpinner} = this.state
 
     if (showSpinner) {
-      return (
-        <View style={styles.spinnerContainer}>
-          <ActivityIndicator size={80} color={styleVars.color.white} />
-        </View>
-      )
+      return <LoadingScreen />
     }
 
     return (

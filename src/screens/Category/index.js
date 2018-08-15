@@ -1,8 +1,12 @@
 import React, {Component} from 'react'
-import {Button, FlatList, Text, TouchableOpacity, View} from 'react-native'
+import {ActivityIndicator, Button, FlatList, Text, TouchableOpacity, View} from 'react-native'
 
 import fetch from '../../utils/fetch'
 import styles from './styles'
+import styleVars from '../../styles/variables'
+
+import LoadingScreen from '../LoadingScreen'
+import TouchableContent from '../../components/TouchableContent'
 
 class CategoryHome extends Component<Props> {
   constructor () {
@@ -10,12 +14,15 @@ class CategoryHome extends Component<Props> {
 
     this.mainNavigator = this.mainNavigator.bind(this)
     this.renderItemFn = this.renderItemFn.bind(this)
-    this.state = {categories: []}
+    this.state = {categories: [], fetching: true}
   }
 
   async componentDidMount () {
     const {data: categories} = await fetch.get('category')
-    this.setState({categories: categories || []})
+    await this.setState({
+      categories: categories || [],
+      fetching: false
+    })
   }
 
   mainNavigator (route, params = {}) {
@@ -29,12 +36,11 @@ class CategoryHome extends Component<Props> {
   renderItemFn (listItem) {
     const category = listItem.item
     return (
-      <TouchableOpacity onPress={this.mainNavigator('CategoryShow', {categoryId: category.id})}>
-        <View>
-          <Text style={{
-            fontSize: 20,
-            lineHeight: 30
-          }}>
+      <TouchableOpacity
+        key={`listedCategory${category.id}`}
+        onPress={this.mainNavigator('CategoryShow', {categoryId: category.id})}>
+        <View style={styles.categoryListItemContainer}>
+          <Text style={styles.categoryListItem}>
             {category.name}
           </Text>
         </View>
@@ -42,21 +48,42 @@ class CategoryHome extends Component<Props> {
     )
   }
 
+  headerComponent () {
+    return (
+      <View>
+        <Text style={styles.header}>Category Name</Text>
+      </View>
+    )
+  }
+
+  emptyCategoryList () {
+    return (
+      <View key='listedCategory0'>
+        <Text>There are no categories</Text>
+      </View>
+    )
+  }
+
   render () {
+    if (this.state.fetching) {
+      return <LoadingScreen />
+    }
+
     return (
       <View style={styles.body}>
-        <Button
-          onPress={this.mainNavigator('CategoryParentForm')}
-          color="#841584"
-          title={'Create Category'}
+        <TouchableContent
+          onPressFn={this.mainNavigator('CategoryParentForm')}
+          content={
+            <View style={styles.buttonContainer}>
+              <Text style={styles.buttonStyle}>Add Category</Text>
+            </View>}
         />
-        {this.state.categories.length === 0 ?
-          <Text style={{fontSize: 20}}>Loading...</Text> :
-          <FlatList
-            data={this.state.categories}
-            renderItem={this.renderItemFn}
-          />
-        }
+        <FlatList
+          data={this.state.categories}
+          renderItem={this.renderItemFn}
+          ListEmptyComponent={this.emptyCategoryList}
+          ListHeaderComponent={this.headerComponent}
+        />
       </View>
     )
   }

@@ -1,5 +1,6 @@
 import {StyleSheet} from 'react-native'
 
+import genericStyles from '../../styles/generic'
 import styleVars from '../../styles/variables'
 
 const styles = StyleSheet.create({
@@ -8,7 +9,7 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
   },
-  errorText: styleVars.error,
+  errorText: genericStyles.error,
   formHeading: {
     fontSize: styleVars.size.font.header,
     paddingBottom: '10%'
@@ -23,13 +24,7 @@ const styles = StyleSheet.create({
     color: styleVars.color.white,
     textAlign: 'center'
   },
-  spinnerContainer: {
-    alignItems: 'center',
-    backgroundColor: styleVars.color.appBg,
-    flex: 1,
-    flexDirection: 'column',
-    paddingTop: '70%'
-  },
+  spinnerContainer: genericStyles.spinnerContainer
 })
 
 export default styles

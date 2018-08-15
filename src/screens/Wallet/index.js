@@ -4,18 +4,26 @@ import {Button, FlatList, Text, TouchableOpacity, View} from 'react-native'
 import fetch from '../../utils/fetch'
 import styles from './styles'
 
+import LoadingScreen from '../LoadingScreen'
+
 class WalletHome extends Component<Props> {
   constructor (props) {
     super(props)
 
     this.mainNavigator = this.mainNavigator.bind(this)
     this.renderItemFn = this.renderItemFn.bind(this)
-    this.state = {wallets: []}
+    this.state = {
+      fetching: true,
+      wallets: []
+    }
   }
 
   async componentDidMount () {
     const {data: wallets} = await fetch.get('wallet')
-    this.setState({wallets: wallets || []})
+    this.setState({
+      fetching: false,
+      wallets: wallets || []
+    })
   }
 
   mainNavigator (route, params = {}) {
@@ -43,6 +51,10 @@ class WalletHome extends Component<Props> {
   }
 
   render () {
+    if (this.state.fetching) {
+      return <LoadingScreen />
+    }
+
     return (
       <View style={styles.body}>
         <Button

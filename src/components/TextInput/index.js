@@ -1,22 +1,34 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import {Text, TextInput, View} from 'react-native'
 
 import styles from './styles'
 
-function TextInputComponent ({errorMsg, inputName, placeholder, updateStateFn, value}) {
+function TextInputComponent (props) {
   return (
     <View style={styles.body}>
       <Text style={styles.header}>
-        {inputName}:
+        {props.inputName}:
       </Text>
       <TextInput
-        onChangeText={updateStateFn}
-        placeholder={placeholder || inputName}
-        value={value}
+        onChangeText={props.updateStateFn}
+        placeholder={props.placeholder || props.inputName}
+        value={props.value}
       />
-      <Text style={styles.errorMessage}>{errorMsg}</Text>
+      <Text style={styles.errorMessage}>{props.errorMsg}</Text>
     </View>
   )
+}
+
+TextInputComponent.propTypes = {
+  errorMsg: PropTypes.oneOfType([
+    PropTypes.object,
+    PropTypes.string
+  ]),
+  inputName: PropTypes.string.isRequired,
+  placeholder: PropTypes.string,
+  updateStateFn: PropTypes.func.isRequired,
+  value: PropTypes.string
 }
 
 export default TextInputComponent

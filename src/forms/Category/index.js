@@ -41,7 +41,7 @@ class CategoryForm extends Component<Props> {
     const {isSubmiting, isUpdate} = this.props
     const isLoadingData = isUpdate && !this.state.name && !this.state.loadedData
 
-    if (isSubmiting || isLoadingData) {
+    if (isLoadingData) {
       return (
         <View style={styles.spinnerContainer}>
           <ActivityIndicator size={80} color={styleVars.color.white} />
@@ -75,7 +75,9 @@ class CategoryForm extends Component<Props> {
           onPressFn={this.submit}
           content={
             <View style={styles.buttonContainer}>
-              <Text style={styles.buttonStyle}>{this.props.btnText}</Text>
+              {isSubmiting
+                ? <ActivityIndicator size={13} color={styleVars.color.white} />
+                : <Text style={styles.buttonStyle}>{this.props.btnText}</Text>}
             </View>
           }
         />

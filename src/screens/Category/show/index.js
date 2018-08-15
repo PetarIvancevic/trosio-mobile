@@ -35,11 +35,11 @@ class CategoryShow extends Component<Props> {
     const categoryId = navigation.getParam('categoryId')
 
     const {data} = await fetch.delete(`category/${categoryId}`)
-    navigation.navigate('Categories')
+    return navigation.navigate('Categories')
   }
 
   toggleModal () {
-    this.setState({isModalOpen: !this.state.isModalOpen})
+    return this.setState({isModalOpen: !this.state.isModalOpen})
   }
 
   render () {

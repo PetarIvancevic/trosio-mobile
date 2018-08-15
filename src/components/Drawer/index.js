@@ -4,7 +4,7 @@ import {
   DrawerItems,
   SafeAreaView
 } from 'react-navigation'
-import {AsyncStorage, ScrollView, StyleSheet} from 'react-native'
+import {AsyncStorage, ScrollView, Image, StyleSheet, Text, View} from 'react-native'
 
 import styles from './styles'
 
@@ -21,7 +21,7 @@ class DrawerComponent extends Component<Props> {
     super(props)
 
     this.getDrawerItems = this.getDrawerItems.bind(this)
-    this.state = {items: props.items}
+    this.state = {items: props.items, user: {}}
   }
 
   async getDrawerItems () {
@@ -46,17 +46,36 @@ class DrawerComponent extends Component<Props> {
   }
 
   async componentWillMount () {
-    this.setState({items: await this.getDrawerItems()})
+    await this.setState({items: await this.getDrawerItems()})
   }
 
   async componentWillUpdate () {
-    this.setState({items: await this.getDrawerItems()})
+    const items = await this.getDrawerItems()
+    const user = JSON.parse(await AsyncStorage.getItem('user'))
+
+    if (!_.isEqual(items, this.state.items)) {
+      await this.setState({items})
+    }
+
+    if (!_.isEqual(user, this.state.user)) {
+      await this.setState({user})
+    }
   }
 
   render () {
+    const {user} = this.state
+
     return (
       <ScrollView>
         <SafeAreaView style={styles.container} forceInset={{ top: 'always', horizontal: 'never' }}>
+          {!_.isEmpty(user) &&
+            <View style={styles.userDataContainer}>
+              <Image
+                style={styles.userImage}
+                source={{uri: user.photo}}
+              />
+              <Text style={styles.userInfo}>{user.name}</Text>
+            </View>}
           <DrawerItems {...this.props} items={this.state.items}/>
         </SafeAreaView>
       </ScrollView>

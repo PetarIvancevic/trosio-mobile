@@ -39,6 +39,9 @@ class CategoryParentForm extends Component<Props> {
 
   async submit (data) {
     const {navigation} = this.props
+
+    if (this.state.isSubmiting) return
+
     await this.setState({isSubmiting: true})
 
     const categoryId = navigation.getParam('categoryId')
@@ -61,7 +64,7 @@ class CategoryParentForm extends Component<Props> {
     } catch (err) {
       console.error(err)
     }
-    this.setState({isSubmiting: false})
+    await this.setState({isSubmiting: false})
   }
 
   render () {
