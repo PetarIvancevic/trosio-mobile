@@ -29,6 +29,12 @@ class WalletParentForm extends Component<Props> {
     this.setState({categories: categories.data})
   }
 
+  componentWillUnmount () {
+    const {navigation} = this.props
+
+    navigation.setParams({walletId: null})
+  }
+
   async submit (data) {
     let error, response
     await this.setState({isSubmiting: true})

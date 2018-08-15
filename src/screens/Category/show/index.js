@@ -2,6 +2,7 @@ import React, {Component} from 'react'
 import {Button, Text, View} from 'react-native'
 
 import fetch from '../../../utils/fetch'
+import LoadingScreen from '../../LoadingScreen'
 import ModalComponent from '../../../components/Modal'
 import styles from './styles'
 
@@ -12,21 +13,28 @@ class CategoryShow extends Component<Props> {
     this.mainNavigator = this.mainNavigator.bind(this)
     this.toggleModal = this.toggleModal.bind(this)
     this.deleteModal = this.deleteModal.bind(this)
-    this.state = {category: {}, isModalOpen: false}
+    this.state = {
+      category: {},
+      isModalOpen: false,
+      fetching: true
+    }
   }
 
   async componentDidMount () {
     const {navigation} = this.props
     const categoryId = navigation.getParam('categoryId')
     const {data: category} = await fetch.get(`category/${categoryId}`)
-    this.setState({category})
+    await this.setState({
+      category,
+      fetching: false
+    })
   }
 
   mainNavigator (route, params = {}) {
     const {navigation} = this.props
 
     return function () {
-      navigation.navigate(route, params)
+      return navigation.navigate(route, params)
     }
   }
 
@@ -46,6 +54,10 @@ class CategoryShow extends Component<Props> {
     const {navigation} = this.props
     const categoryId = navigation.getParam('categoryId')
     const {category} = this.state
+
+    if (this.state.fetching) {
+      return <LoadingScreen />
+    }
 
     return (
       <View style={styles.body}>

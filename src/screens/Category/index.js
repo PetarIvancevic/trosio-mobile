@@ -28,8 +28,9 @@ class CategoryHome extends Component<Props> {
   mainNavigator (route, params = {}) {
     const {navigation} = this.props
 
+    console.log('params', params)
     return function () {
-      navigation.navigate(route, params)
+      return navigation.navigate(route, params)
     }
   }
 

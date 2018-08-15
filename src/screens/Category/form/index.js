@@ -67,6 +67,12 @@ class CategoryParentForm extends Component<Props> {
     await this.setState({isSubmiting: false})
   }
 
+  componentWillUnmount () {
+    const {navigation} = this.props
+
+    navigation.setParams({categoryId: null})
+  }
+
   render () {
     const {navigation} = this.props
     const categoryId = navigation.getParam('categoryId')
