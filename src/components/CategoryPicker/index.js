@@ -6,6 +6,8 @@ import {
   View,
 } from 'react-native'
 
+import styles from './styles'
+
 function getPickerItems (categories) {
   return _.map(categories, function (category, index) {
     return (
@@ -28,11 +30,10 @@ function CategoryPicker ({categories, updateStateFn, selectedCategory}) {
   }
 
   return (
-    <View>
-      <Text>Category:</Text>
+    <View style={styles.pickerContainer}>
+      <Text style={styles.header}>Category:</Text>
       <Picker
         selectedValue={selectedCategory}
-        style={{height: 50, width: 100}}
         onValueChange={updateStateFn}>
         {getPickerItems(categories)}
       </Picker>

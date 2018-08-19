@@ -9,6 +9,7 @@ import ErrorPage from './src/screens/Error'
 import HomeScreen from './src/screens/Home'
 import LoginScreen from './src/screens/Login'
 import LogoutScreen from './src/screens/Logout'
+import TransactionParentForm from './src/screens/Transaction/form'
 import WalletHome from './src/screens/Wallet'
 import WalletParentForm from './src/screens/Wallet/form'
 import WalletShow from './src/screens/Wallet/show'
@@ -17,6 +18,7 @@ export default createDrawerNavigator({
   Home: HomeScreen,
   Categories: CategoryHomeScreen,
   CategoryParentForm: CategoryParentForm,
+  TransactionParentForm: TransactionParentForm,
   CategoryShow: CategoryShow,
   WalletShow: WalletShow,
   ErrorPage: ErrorPage,

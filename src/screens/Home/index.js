@@ -2,7 +2,9 @@ import React, {Component} from 'react'
 import {Button, Text, TouchableOpacity, View} from 'react-native'
 
 import fetch from '../../utils/fetch'
+import LoadingScreen from '../LoadingScreen'
 import styles from './styles'
+import TouchableContent from '../../components/TouchableContent'
 
 class Home extends Component<Props> {
   constructor () {
@@ -22,16 +24,30 @@ class Home extends Component<Props> {
   render () {
     return (
       <View style={styles.body}>
-        <Button
-          onPress={this.mainNavigator('Wallets')}
-          color="#841584"
-          title={'Wallets'}
+        <TouchableContent
+          onPressFn={this.mainNavigator('TransactionParentForm')}
+          content={
+            <View style={styles.buttonContainer}>
+              <Text style={styles.buttonStyle}>New Transaction</Text>
+            </View>}
         />
-        <Button
-          onPress={this.mainNavigator('Categories')}
-          color="#841584"
-          title={'Categories'}
+
+        <TouchableContent
+          onPressFn={this.mainNavigator('Wallets')}
+          content={
+            <View style={styles.buttonContainer}>
+              <Text style={styles.buttonStyle}>Wallets</Text>
+            </View>}
         />
+
+        <TouchableContent
+          onPressFn={this.mainNavigator('Categories')}
+          content={
+            <View style={styles.buttonContainer}>
+              <Text style={styles.buttonStyle}>Categories</Text>
+            </View>}
+        />
+
       </View>
     )
   }

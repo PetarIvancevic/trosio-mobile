@@ -20,6 +20,20 @@ const errors = {
         'string.min': 'Name must be at least two characters long'
       }
     },
+    transaction: {
+      amount: {
+        'any.required': 'Amount is required'
+      },
+      comment: {
+
+      },
+      date: {
+        'any.required': 'Date of transaction is required'
+      },
+      place: {
+
+      }
+    },
     wallet: {
       duplicate: genericErrorMsgs.duplicate('wallet'),
       name: {

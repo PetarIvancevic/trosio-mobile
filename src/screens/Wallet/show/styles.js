@@ -17,6 +17,37 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 20
   },
+  fullRowText: {
+    display: 'flex',
+    color: styleVars.color.white
+  },
+  transactionListItemContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+    backgroundColor: styleVars.color.appBg,
+    borderBottomWidth: 1,
+    borderBottomColor: styleVars.color.white,
+    borderRadius: 3,
+    padding: '2%'
+  },
+  transactionListItemPlace: {
+    color: styleVars.color.white,
+    fontSize: 12,
+    lineHeight: 25,
+    flex: 0.5
+  },
+  transactionListItemAmount: {
+    color: styleVars.color.white,
+    fontSize: 12,
+    lineHeight: 25,
+    flex: 0.25
+  },
+  transactionListItemDate: {
+    color: styleVars.color.white,
+    fontSize: 12,
+    lineHeight: 25,
+    flex: 0.25
+  },
   walletName: {
     fontSize: 25,
     textAlign: 'center'

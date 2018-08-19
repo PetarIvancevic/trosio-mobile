@@ -1,11 +1,12 @@
 import React, {Component} from 'react'
-import {Button, FlatList, Text, View} from 'react-native'
+import {Button, FlatList, Text, TouchableOpacity, View} from 'react-native'
 
 import fetch from '../../../utils/fetch'
 import LoadingScreen from '../../LoadingScreen'
 import ModalComponent from '../../../components/Modal'
 import styles from './styles'
 import TouchableContent from '../../../components/TouchableContent'
+import utils from '../../../utils/generic'
 
 class WalletShow extends Component<Props> {
   constructor (props) {
@@ -15,6 +16,7 @@ class WalletShow extends Component<Props> {
     this.toggleModal = this.toggleModal.bind(this)
     this.deleteModal = this.deleteModal.bind(this)
     this.state = {
+      transactions: [],
       wallet: {},
       isModalOpen: false,
       fetching: true
@@ -25,8 +27,10 @@ class WalletShow extends Component<Props> {
     const {navigation} = this.props
     const walletId = navigation.getParam('walletId')
     const {data: wallet} = await fetch.get(`wallet/${walletId}`)
+    const {data: transactions} = await fetch.get(`wallet/${walletId}/transaction`)
 
     await this.setState({
+      transactions: transactions || [],
       wallet,
       fetching: false
     })
@@ -50,6 +54,46 @@ class WalletShow extends Component<Props> {
 
   toggleModal () {
     return this.setState({isModalOpen: !this.state.isModalOpen})
+  }
+
+  renderItemFn (listItem) {
+    const transaction = listItem.item
+    console.log('asd', transaction)
+    return (
+      <TouchableOpacity
+        key={`listedTransaction${transaction.id}`}>
+        <View style={styles.transactionListItemContainer}>
+          <View style={styles.transactionListItemPlace}>
+            <Text style={styles.fullRowText}>
+              kategorija {transaction.categoryId}
+            </Text>
+            <Text style={styles.fullRowText}>
+              lokacija {transaction.place}
+            </Text>
+          </View>
+            <Text style={styles.transactionListItemAmount}>{transaction.amount}</Text>
+            <Text style={styles.transactionListItemDate}>{utils.formatDate(transaction.date)}</Text>
+        </View>
+      </TouchableOpacity>
+    )
+  }
+
+  headerComponent () {
+    return (
+      <View style={{display: 'flex', flexDirection: 'row'}}>
+        <Text style={{flex: 0.5}}>Category/Place</Text>
+        <Text style={{flex: 0.25}}>Amount</Text>
+        <Text style={{flex: 0.25}}>Date</Text>
+      </View>
+    )
+  }
+
+  emptyTransactionList () {
+    return (
+      <View key='listedWallet0'>
+        <Text>There are no transactions for this wallet</Text>
+      </View>
+    )
   }
 
   render () {
@@ -79,6 +123,13 @@ class WalletShow extends Component<Props> {
             <View style={styles.buttonContainer}>
               <Text style={styles.buttonStyle}>Delete</Text>
             </View>}
+        />
+
+        <FlatList
+          data={this.state.transactions}
+          renderItem={this.renderItemFn}
+          ListEmptyComponent={this.emptyTransactionList}
+          ListHeaderComponent={this.headerComponent}
         />
 
         {this.state.isModalOpen && <ModalComponent
