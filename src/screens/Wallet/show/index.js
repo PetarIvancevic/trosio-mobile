@@ -7,7 +7,7 @@ import ModalComponent from '../../../components/Modal'
 import styles from './styles'
 import TouchableContent from '../../../components/TouchableContent'
 
-class CategoryShow extends Component<Props> {
+class WalletShow extends Component<Props> {
   constructor (props) {
     super(props)
 
@@ -15,8 +15,7 @@ class CategoryShow extends Component<Props> {
     this.toggleModal = this.toggleModal.bind(this)
     this.deleteModal = this.deleteModal.bind(this)
     this.state = {
-      category: {},
-      transactions: [],
+      wallet: {},
       isModalOpen: false,
       fetching: true
     }
@@ -24,12 +23,11 @@ class CategoryShow extends Component<Props> {
 
   async componentDidMount () {
     const {navigation} = this.props
-    const categoryId = navigation.getParam('categoryId')
-    const {data: category} = await fetch.get(`category/${categoryId}`)
-    const {data: transactions} = await fetch.get(`category/${categoryId}/transactions`)
+    const walletId = navigation.getParam('walletId')
+    const {data: wallet} = await fetch.get(`wallet/${walletId}`)
+
     await this.setState({
-      category,
-      transactions,
+      wallet,
       fetching: false
     })
   }
@@ -44,47 +42,20 @@ class CategoryShow extends Component<Props> {
 
   async deleteModal () {
     const {navigation} = this.props
-    const categoryId = navigation.getParam('categoryId')
+    const walletId = navigation.getParam('walletId')
 
-    const {data} = await fetch.delete(`category/${categoryId}`)
-    return navigation.navigate('Categories')
+    const {data} = await fetch.delete(`wallet/${walletId}`)
+    return navigation.navigate('Wallets')
   }
 
   toggleModal () {
     return this.setState({isModalOpen: !this.state.isModalOpen})
   }
 
-  renderItemFn (listItem) {
-    const transaction = listItem.item
-    return (
-      <View style={styles.categoryListItemContainer}>
-        <Text style={styles.categoryListItem}>
-          {transaction.place}
-        </Text>
-      </View>
-    )
-  }
-
-  headerComponent () {
-    return (
-      <View>
-        <Text style={styles.header}>Transactions with category</Text>
-      </View>
-    )
-  }
-
-  emptyCategoryList () {
-    return (
-      <View key='listedCategory0'>
-        <Text>There are no transactions for this category</Text>
-      </View>
-    )
-  }
-
   render () {
     const {navigation} = this.props
-    const categoryId = navigation.getParam('categoryId')
-    const {category} = this.state
+    const walletId = navigation.getParam('walletId')
+    const {wallet} = this.state
 
     if (this.state.fetching) {
       return <LoadingScreen />
@@ -92,10 +63,10 @@ class CategoryShow extends Component<Props> {
 
     return (
       <View style={styles.body}>
-        <Text style={styles.categoryName}>{category.name}</Text>
+        <Text style={styles.walletName}>{wallet.name}</Text>
 
         <TouchableContent
-          onPressFn={this.mainNavigator('CategoryParentForm', {categoryId})}
+          onPressFn={this.mainNavigator('WalletParentForm', {walletId})}
           content={
             <View style={styles.buttonContainer}>
               <Text style={styles.buttonStyle}>Edit</Text>
@@ -110,15 +81,8 @@ class CategoryShow extends Component<Props> {
             </View>}
         />
 
-        <FlatList
-          data={this.state.transactions}
-          renderItem={this.renderItemFn}
-          ListEmptyComponent={this.emptyCategoryList}
-          ListHeaderComponent={this.headerComponent}
-        />
-
         {this.state.isModalOpen && <ModalComponent
-          message={`Are you sure you want to delete "${category.name}" category`}
+          message={`Are you sure you want to delete "${wallet.name}" wallet`}
           confirmFn={this.deleteModal}
           closeModalFn={this.toggleModal}
         />}
@@ -127,4 +91,4 @@ class CategoryShow extends Component<Props> {
   }
 }
 
-export default CategoryShow
+export default WalletShow

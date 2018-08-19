@@ -1,15 +1,31 @@
 import {StyleSheet} from 'react-native'
 
+import genericStyles from '../../styles/generic'
 import styleVars from '../../styles/variables'
 
 const styles = StyleSheet.create({
-  spinnerContainer: {
+  body: {
     alignItems: 'center',
-    backgroundColor: styleVars.color.appBg,
     flex: 1,
-    flexDirection: 'column',
-    paddingTop: '70%'
+    flexDirection: 'column'
   },
+  errorText: genericStyles.error,
+  formHeading: {
+    fontSize: styleVars.size.font.header,
+    paddingBottom: '10%',
+    textAlign: 'center'
+  },
+  buttonContainer: {
+    backgroundColor: styleVars.color.appBg,
+    borderRadius: 7,
+    marginTop: '10%',
+    padding: '5%'
+  },
+  buttonStyle: {
+    color: styleVars.color.white,
+    textAlign: 'center'
+  },
+  spinnerContainer: genericStyles.spinnerContainer
 })
 
 export default styles

@@ -1,14 +1,16 @@
 import React, {Component} from 'react'
-import {Button, FlatList, Text, TouchableOpacity, View} from 'react-native'
+import {ActivityIndicator, Button, FlatList, Text, TouchableOpacity, View} from 'react-native'
 
 import fetch from '../../utils/fetch'
 import styles from './styles'
+import styleVars from '../../styles/variables'
 
 import LoadingScreen from '../LoadingScreen'
+import TouchableContent from '../../components/TouchableContent'
 
 class WalletHome extends Component<Props> {
-  constructor (props) {
-    super(props)
+  constructor () {
+    super()
 
     this.mainNavigator = this.mainNavigator.bind(this)
     this.renderItemFn = this.renderItemFn.bind(this)
@@ -20,9 +22,9 @@ class WalletHome extends Component<Props> {
 
   async componentDidMount () {
     const {data: wallets} = await fetch.get('wallet')
-    this.setState({
-      fetching: false,
-      wallets: wallets || []
+    await this.setState({
+      wallets: wallets || [],
+      fetching: false
     })
   }
 
@@ -30,23 +32,38 @@ class WalletHome extends Component<Props> {
     const {navigation} = this.props
 
     return function () {
-      navigation.navigate(route, params)
+      return navigation.navigate(route, params)
     }
   }
 
   renderItemFn (listItem) {
     const wallet = listItem.item
     return (
-      <TouchableOpacity onPress={this.mainNavigator('WalletShow', {walletId: wallet.id})}>
-        <View>
-          <Text style={{
-            fontSize: 20,
-            lineHeight: 30
-          }}>
+      <TouchableOpacity
+        key={`listedWallet${wallet.id}`}
+        onPress={this.mainNavigator('WalletShow', {walletId: wallet.id})}>
+        <View style={styles.walletListItemContainer}>
+          <Text style={styles.walletListItem}>
             {wallet.name}
           </Text>
         </View>
       </TouchableOpacity>
+    )
+  }
+
+  headerComponent () {
+    return (
+      <View>
+        <Text style={styles.header}>Wallet Name</Text>
+      </View>
+    )
+  }
+
+  emptyWalletList () {
+    return (
+      <View key='listedWallet0'>
+        <Text>There are no wallets</Text>
+      </View>
     )
   }
 
@@ -57,21 +74,23 @@ class WalletHome extends Component<Props> {
 
     return (
       <View style={styles.body}>
-        <Button
-          onPress={this.mainNavigator('WalletParentForm')}
-          color="#841584"
-          title={'Create Wallet'}
+        <TouchableContent
+          onPressFn={this.mainNavigator('WalletParentForm')}
+          content={
+            <View style={styles.buttonContainer}>
+              <Text style={styles.buttonStyle}>Add Wallet</Text>
+            </View>}
         />
-        {this.state.wallets.length === 0 ?
-          <Text style={{fontSize: 20}}>Loading...</Text> :
-          <FlatList
-            data={this.state.wallets}
-            renderItem={this.renderItemFn}
-          />
-        }
+        <FlatList
+          data={this.state.wallets}
+          renderItem={this.renderItemFn}
+          ListEmptyComponent={this.emptyWalletList}
+          ListHeaderComponent={this.headerComponent}
+        />
       </View>
     )
   }
 }
 
 export default WalletHome
+

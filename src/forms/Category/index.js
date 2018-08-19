@@ -9,6 +9,7 @@ import {
   TouchableOpacity,
   View
 } from 'react-native'
+import PropTypes from 'prop-types'
 
 import consts from '../../consts'
 import styles from './styles'
@@ -22,8 +23,7 @@ class CategoryForm extends Component<Props> {
 
     this.submit = this.submit.bind(this)
     this.state = {
-      loadedData: false,
-      name: '',
+      name: props.data.name
     }
   }
 
@@ -31,23 +31,8 @@ class CategoryForm extends Component<Props> {
     this.props.submitFn(this.state)
   }
 
-  componentWillReceiveProps (nextProps) {
-    if (!_.isEmpty(nextProps.data) && !this.state.name) {
-      this.setState({name: nextProps.data.name, loadedData: true})
-    }
-  }
-
   render () {
-    const {isSubmiting, isUpdate} = this.props
-    const isLoadingData = isUpdate && !this.state.name && !this.state.loadedData
-
-    if (isLoadingData) {
-      return (
-        <View style={styles.spinnerContainer}>
-          <ActivityIndicator size={80} color={styleVars.color.white} />
-        </View>
-      )
-    }
+    const {isSubmiting} = this.props
 
     return (
       <View style={styles.body}>
@@ -84,6 +69,15 @@ class CategoryForm extends Component<Props> {
       </View>
     )
   }
+}
+
+CategoryForm.propTypes = {
+  error: PropTypes.object,
+  data: PropTypes.object,
+  btnText: PropTypes.string,
+  formTitle: PropTypes.string,
+  isSubmiting: PropTypes.bool,
+  submitFn: PropTypes.func.isRequired
 }
 
 export default CategoryForm

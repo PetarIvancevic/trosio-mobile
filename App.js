@@ -2,21 +2,23 @@ import React from 'react'
 import {createDrawerNavigator} from 'react-navigation'
 
 import CategoryHomeScreen from './src/screens/Category'
-import CategoryShow from './src/screens/Category/show'
 import CategoryParentForm from './src/screens/Category/form'
+import CategoryShow from './src/screens/Category/show'
+import DrawerComponent from './src/components/Drawer'
 import ErrorPage from './src/screens/Error'
 import HomeScreen from './src/screens/Home'
 import LoginScreen from './src/screens/Login'
 import LogoutScreen from './src/screens/Logout'
-import DrawerComponent from './src/components/Drawer'
-import WalletParentForm from './src/screens/Wallet/form'
 import WalletHome from './src/screens/Wallet'
+import WalletParentForm from './src/screens/Wallet/form'
+import WalletShow from './src/screens/Wallet/show'
 
 export default createDrawerNavigator({
   Home: HomeScreen,
   Categories: CategoryHomeScreen,
   CategoryParentForm: CategoryParentForm,
   CategoryShow: CategoryShow,
+  WalletShow: WalletShow,
   ErrorPage: ErrorPage,
   Wallets: WalletHome,
   Login: LoginScreen,

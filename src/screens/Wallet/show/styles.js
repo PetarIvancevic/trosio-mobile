@@ -17,7 +17,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     fontSize: 20
   },
-  categoryName: {
+  walletName: {
     fontSize: 25,
     textAlign: 'center'
   }

@@ -19,6 +19,14 @@ function getPickerItems (categories) {
 }
 
 function CategoryPicker ({categories, updateStateFn, selectedCategory}) {
+  if (!_.size(categories)) {
+    return (
+      <View>
+        <Text>You have no categories to apply to this transaction</Text>
+      </View>
+    )
+  }
+
   return (
     <View>
       <Text>Category:</Text>

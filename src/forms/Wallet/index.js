@@ -9,12 +9,16 @@ import {
   TouchableOpacity,
   View
 } from 'react-native'
+import PropTypes from 'prop-types'
 
 import CategoryPicker from '../../components/CategoryPicker'
+import consts from '../../consts'
 import CurrencyPicker from '../../components/CurrencyPicker'
 import PayDayComponent from '../../components/PayDay'
 import styles from './styles'
 import styleVars from '../../styles/variables'
+import TextInputComponent from '../../components/TextInput'
+import TouchableContent from '../../components/TouchableContent'
 
 class WalletForm extends Component<Props> {
   constructor (props) {
@@ -24,17 +28,25 @@ class WalletForm extends Component<Props> {
     this.updateStateFn = this.updateStateFn.bind(this)
 
     this.state = {
-      currency: '10',
-      balance: '0',
+      balance: '',
+      currency: 10,
       name: '',
-      paycheckAmount: '0',
-      paycheckDay: '1',
+      paycheckAmount: '',
+      paycheckDay: 1,
+      ..._.pick(props.data, [
+        'balance',
+        'currency',
+        'name',
+        'paycheckAmount',
+        'paycheckDay'
+      ])
     }
   }
 
-  updateStateFn (stateProperty) {
+  updateStateFn (stateProperty, type) {
     return (value) => {
-      this.setState({[stateProperty]: value})
+      let newValue = type === 'numeric' ? _.toNumber(value) : value
+      this.setState({[stateProperty]: newValue})
     }
   }
 
@@ -43,82 +55,81 @@ class WalletForm extends Component<Props> {
   }
 
   render () {
-    if (this.props.isSubmiting) {
-      return (
-        <View style={styles.spinnerContainer}>
-          <ActivityIndicator size={80} color={styleVars.color.white} />
-        </View>
-      )
-    }
+    const {isUpdate, isSubmiting} = this.props
 
     return (
-      <View>
+      <View style={styles.body}>
         <View>
-          <Text>
+          <Text style={styles.formHeading}>
             {this.props.formTitle}
           </Text>
         </View>
 
-        <View>
-          <Text>
-            Name:
-          </Text>
-          <TextInput
-            style={{height: 40}}
-            placeholder='Name...'
-            onChangeText={this.updateStateFn('name')}
-            value={this.state.name}
-          />
-        </View>
-
-        <CategoryPicker
-          selectedCategory={this.state.categoryId}
-          categories={this.props.categories}
-          updateStateFn={this.updateStateFn('categoryId')}
+        <TextInputComponent
+          errorMsg={consts.errors.messages.wallet.name[_.get(this.props.errors, 'name')]}
+          inputName='Name'
+          placeholder='Wallet name...'
+          updateStateFn={(name) => this.setState({name})}
+          value={this.state.name}
         />
 
         <CurrencyPicker
-          selectedCurrency={this.state.currency}
-          updateStateFn={this.updateStateFn('currency')}
+          selectedCurrency={_.toString(this.state.currency)}
+          updateStateFn={this.updateStateFn('currency', 'numeric')}
         />
 
-        <View>
-          <Text>
-            Wallet initial balance:
-          </Text>
-          <TextInput
-            keyboardType='numeric'
-            onChangeText={this.updateStateFn('balance')}
-            value={this.state.balance}
-          />
-        </View>
+        {!isUpdate && <TextInputComponent
+          errorMsg={consts.errors.messages.wallet.balance[_.get(this.props.errors, 'balance')]}
+          inputName='Wallet initial balance'
+          keyboardType='numeric'
+          placeholder='4000'
+          updateStateFn={this.updateStateFn('balance', 'numeric')}
+          value={_.toString(this.state.balance)}
+        />}
 
         <PayDayComponent
-          selectedPayCheckDay={this.state.paycheckDay}
-          updateStateFn={this.updateStateFn('paycheckDay')}
+          selectedPayCheckDay={_.toString(this.state.paycheckDay)}
+          updateStateFn={this.updateStateFn('paycheckDay', 'numeric')}
+        />
+
+        <TextInputComponent
+          errorMsg={consts.errors.messages.wallet.paycheckAmount[_.get(this.props.errors, 'paycheckAmount')]}
+          inputName='Paycheck amount'
+          keyboardType='numeric'
+          placeholder='2500'
+          updateStateFn={this.updateStateFn('paycheckAmount', 'numeric')}
+          value={_.toString(this.state.paycheckAmount)}
         />
 
         <View>
-          <Text>
-            Paycheck amount:
+          <Text style={styles.errorText}>
+            {_.get(consts.errors.messages, this.props.errors)}
           </Text>
-          <TextInput
-            keyboardType='numeric'
-            onChangeText={this.updateStateFn('paycheckAmount')}
-            value={this.state.paycheckAmount}
-          />
         </View>
 
-        <View>
-          <Button
-            onPress={this.submit}
-            color="#841584"
-            title={'Create Wallet'}
-          />
-        </View>
+        <TouchableContent
+          onPressFn={this.submit}
+          content={
+            <View style={styles.buttonContainer}>
+              {isSubmiting
+                ? <ActivityIndicator size={13} color={styleVars.color.white} />
+                : <Text style={styles.buttonStyle}>{this.props.btnText}</Text>}
+            </View>
+          }
+        />
       </View>
     )
   }
+}
+
+WalletForm.propTypes = {
+  error: PropTypes.object,
+  data: PropTypes.object,
+  btnText: PropTypes.string,
+  formTitle: PropTypes.string,
+  isUpdate: PropTypes.bool,
+  isSubmiting: PropTypes.bool,
+  submitFn: PropTypes.func.isRequired
 }
 
 export default WalletForm

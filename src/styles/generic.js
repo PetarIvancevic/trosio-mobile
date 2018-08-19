@@ -3,7 +3,7 @@ import styleVars from './variables'
 const generic = {
   error: {
     fontWeight: '700',
-    color: styleVars.errorColor
+    color: styleVars.color.error
   },
   spinnerContainer: {
     alignItems: 'center',

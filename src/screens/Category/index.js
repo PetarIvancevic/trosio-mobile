@@ -28,7 +28,6 @@ class CategoryHome extends Component<Props> {
   mainNavigator (route, params = {}) {
     const {navigation} = this.props
 
-    console.log('params', params)
     return function () {
       return navigation.navigate(route, params)
     }
@@ -38,9 +37,10 @@ class CategoryHome extends Component<Props> {
     const category = listItem.item
     return (
       <TouchableOpacity
-        key={`listedCategory${category.id}`}
+        key={`listedCategoryTouch${category.id}`}
         onPress={this.mainNavigator('CategoryShow', {categoryId: category.id})}>
-        <View style={styles.categoryListItemContainer}>
+        <View style={styles.categoryListItemContainer}
+          key={`listedCategory${category.id}`}>
           <Text style={styles.categoryListItem}>
             {category.name}
           </Text>

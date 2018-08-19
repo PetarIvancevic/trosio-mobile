@@ -62,6 +62,10 @@ class DrawerComponent extends Component<Props> {
     }
   }
 
+  async componentWillUnmount () {
+    await this.setState({items: [], user: {}})
+  }
+
   render () {
     const {user} = this.state
 

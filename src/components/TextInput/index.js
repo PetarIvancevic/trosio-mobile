@@ -11,6 +11,7 @@ function TextInputComponent (props) {
         {props.inputName}:
       </Text>
       <TextInput
+        keyboardType={props.keyboardType}
         onChangeText={props.updateStateFn}
         placeholder={props.placeholder || props.inputName}
         value={props.value}

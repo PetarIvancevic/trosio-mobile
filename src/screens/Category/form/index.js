@@ -12,6 +12,7 @@ import {
 import CategoryForm from '../../../forms/Category'
 import errUtils from '../../../utils/error'
 import fetch from '../../../utils/fetch'
+import LoadingScreen from '../../LoadingScreen'
 
 class CategoryParentForm extends Component<Props> {
   constructor (props) {
@@ -22,6 +23,7 @@ class CategoryParentForm extends Component<Props> {
     this.state = {
       data: {},
       errors: {},
+      fetching: true,
       isSubmiting: false
     }
   }
@@ -29,12 +31,15 @@ class CategoryParentForm extends Component<Props> {
   async componentDidMount () {
     const {navigation} = this.props
     const categoryId = navigation.getParam('categoryId')
+    let categoryData = {}
 
     if (categoryId) {
-      await this.setState({categoryId})
-      const {data: categoryData} = await fetch.get(`category/${categoryId}`)
-      await this.setState({data: categoryData})
+      categoryData = _.get(await fetch.get(`category/${categoryId}`), 'data')
     }
+    await this.setState({
+      data: categoryData,
+      fetching: false
+    })
   }
 
   async submit (data) {
@@ -77,11 +82,14 @@ class CategoryParentForm extends Component<Props> {
     const {navigation} = this.props
     const categoryId = navigation.getParam('categoryId')
 
+    if (this.state.fetching) {
+      return <LoadingScreen />
+    }
+
     return (
       <CategoryForm
         errors={this.state.errors}
         data={this.state.data}
-        isUpdate={!!categoryId}
         btnText={categoryId ? 'Update' : 'Create'}
         formTitle={`${categoryId ? 'Update' : 'Create'} Category`}
         isSubmiting={this.state.isSubmiting}
