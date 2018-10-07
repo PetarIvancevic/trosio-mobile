@@ -12,9 +12,10 @@ class WalletShow extends Component<Props> {
   constructor (props) {
     super(props)
 
-    this.mainNavigator = this.mainNavigator.bind(this)
-    this.toggleModal = this.toggleModal.bind(this)
     this.deleteModal = this.deleteModal.bind(this)
+    this.mainNavigator = this.mainNavigator.bind(this)
+    this.renderItemFn = this.renderItemFn.bind(this)
+    this.toggleModal = this.toggleModal.bind(this)
     this.state = {
       transactions: [],
       wallet: {},
@@ -58,10 +59,13 @@ class WalletShow extends Component<Props> {
 
   renderItemFn (listItem) {
     const transaction = listItem.item
-    console.log('asd', transaction)
     return (
       <TouchableOpacity
-        key={`listedTransaction${transaction.id}`}>
+        key={`listedTransaction${transaction.id}`}
+        onPress={this.mainNavigator('TransactionParentForm', {
+          transactionId: transaction.id,
+          walletId: transaction.walletId
+        })}>
         <View style={styles.transactionListItemContainer}>
           <View style={styles.transactionListItemPlace}>
             <Text style={styles.fullRowText}>
@@ -124,6 +128,16 @@ class WalletShow extends Component<Props> {
               <Text style={styles.buttonStyle}>Delete</Text>
             </View>}
         />
+
+        <Text>
+          Balance: {wallet.balance}
+        </Text>
+        <Text>
+          Paycheck day: {wallet.paycheckDay}
+        </Text>
+        <Text>
+          Paycheck Amount: {wallet.paycheckAmount}
+        </Text>
 
         <FlatList
           data={this.state.transactions}

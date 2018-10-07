@@ -3,6 +3,7 @@ import React, {Component} from 'react'
 import {
   Button,
   Picker,
+  ScrollView,
   Text,
   TextInput,
   TouchableOpacity,
@@ -20,6 +21,7 @@ class TransactionParentForm extends Component<Props> {
     super(props)
 
     this.submit = this.submit.bind(this)
+    this.remove = this.remove.bind(this)
 
     this.state = {
       categories: [],
@@ -36,16 +38,12 @@ class TransactionParentForm extends Component<Props> {
     const transactionId = navigation.getParam('transactionId')
     const walletId = navigation.getParam('walletId')
     let transactionData = {}
-    let wallets = {}
+    const wallets = _.get(await fetch.get('wallet'), 'data')
 
     const categories = _.get(await fetch.get('category'), 'data')
 
     if (transactionId) {
       transactionData = _.get(await fetch.get(`wallet/${walletId}/transaction/${transactionId}`), 'data')
-    }
-
-    if (!walletId) {
-      wallets = _.get(await fetch.get('wallet'), 'data')
     }
 
     await this.setState({
@@ -54,6 +52,24 @@ class TransactionParentForm extends Component<Props> {
       fetching: false,
       wallets
     })
+  }
+
+  async remove () {
+    const walletId = this.props.navigation.getParam('walletId')
+    const transactionId = this.props.navigation.getParam('transactionId')
+
+    await this.setState({isSubmiting: true})
+
+    try {
+      const response = await fetch.delete(`wallet/${walletId}/transaction/${transactionId}`)
+
+      if (!_.get(response, 'error')) {
+        return this.props.navigation.navigate('WalletShow', {walletId})
+      }
+    } catch (err) {
+      console.error(err)
+    }
+    await this.setState({isSubmiting: false})
   }
 
   async submit (data) {
@@ -80,7 +96,8 @@ class TransactionParentForm extends Component<Props> {
         'categoryId',
         'comment',
         'date',
-        'place'
+        'place',
+        'type'
       ])
       const response = await fetch[requestData.method](requestData.url, transactionData)
 
@@ -121,16 +138,19 @@ class TransactionParentForm extends Component<Props> {
     }
 
     return (
-      <TransactionForm
-        btnText={transactionId ? 'Update' : 'Create'}
-        categories={this.state.categories}
-        data={this.state.data}
-        errors={this.state.errors}
-        formTitle={`${transactionId ? 'Update' : 'Create'} Transaction`}
-        isSubmiting={this.state.isSubmiting}
-        submitFn={this.submit}
-        wallets={this.state.wallets}
-      />
+      <ScrollView>
+        <TransactionForm
+          btnText={transactionId ? 'Update' : 'Create'}
+          categories={this.state.categories}
+          data={this.state.data}
+          errors={this.state.errors}
+          formTitle={`${transactionId ? 'Update' : 'Create'} Transaction`}
+          isSubmiting={this.state.isSubmiting}
+          removeFn={this.remove}
+          submitFn={this.submit}
+          wallets={this.state.wallets}
+        />
+      </ScrollView>
     )
   }
 }

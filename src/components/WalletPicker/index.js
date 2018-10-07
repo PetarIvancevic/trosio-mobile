@@ -9,24 +9,27 @@ import {
 import styles from './styles'
 
 function getPickerItems (wallets) {
-  return _.map(wallets, function (category, index) {
+  console.log(wallets)
+  return _.map(wallets, function (wallet, index) {
     return (
       <Picker.Item
-        key={`category${index}`}
-        label={category.name}
-        value={category.id}
+        key={`wallet${index}`}
+        label={wallet.name}
+        value={wallet.id}
       />
     )
   })
 }
 
-function WalletPicker ({updateStateFn, selectedWallet, wallets}) {
+function WalletPicker ({enabled, updateStateFn, selectedWallet, wallets}) {
   return (
     <View style={styles.pickerContainer}>
       <Text style={styles.header}>Wallet:</Text>
       <Picker
-        selectedValue={selectedWallet}
-        onValueChange={updateStateFn}>
+        enabled={enabled}
+        onValueChange={updateStateFn}
+        prompt='Select Wallet'
+        selectedValue={selectedWallet}>
         {getPickerItems(wallets)}
       </Picker>
     </View>

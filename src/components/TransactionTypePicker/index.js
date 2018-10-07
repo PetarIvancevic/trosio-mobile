@@ -8,28 +8,27 @@ import PropTypes from 'prop-types'
 
 import styles from './styles'
 
-function CurrencyPicker (props) {
+function TransactionTypePicker (props) {
   return (
     <View style={styles.pickerContainer}>
       <Text style={styles.header}>
-        Currency:
+        Type:
       </Text>
       <Picker
-        selectedValue={props.selectedCurrency}
-        prompt='Select currency'
+        selectedValue={props.selectedType}
+        prompt='Select type of transaction'
         onValueChange={props.updateStateFn}>
-        <Picker.Item key='01' label='Euro' value='10' />
-        <Picker.Item key='02' label='Kuna' value='20' />
-        <Picker.Item key='03' label='Dollar' value='30' />
+        <Picker.Item key='01' label='Withdrawal' value='withdrawal' />
+        <Picker.Item key='02' label='Deposit' value='deposit' />
       </Picker>
     </View>
   )
 }
 
-CurrencyPicker.propTypes = {
+TransactionTypePicker.propTypes = {
   error: PropTypes.object,
-  selectedCurrency: PropTypes.string,
+  selectedType: PropTypes.string,
   updateStateFn: PropTypes.func.isRequired
 }
 
-export default CurrencyPicker
+export default TransactionTypePicker

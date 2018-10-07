@@ -3,6 +3,7 @@ import React, {Component} from 'react'
 import {
   Button,
   Picker,
+  ScrollView,
   Text,
   TextInput,
   TouchableOpacity,
@@ -99,15 +100,17 @@ class WalletParentForm extends Component<Props> {
     }
 
     return (
-      <WalletForm
-        errors={this.state.errors}
-        data={this.state.data}
-        isUpdate={!!walletId}
-        btnText={walletId ? 'Update' : 'Create'}
-        formTitle={`${walletId ? 'Update' : 'Create'} Wallet`}
-        isSubmiting={this.state.isSubmiting}
-        submitFn={this.submit}
-      />
+      <ScrollView>
+        <WalletForm
+          errors={this.state.errors}
+          data={this.state.data}
+          isUpdate={!!walletId}
+          btnText={walletId ? 'Update' : 'Create'}
+          formTitle={`${walletId ? 'Update' : 'Create'} Wallet`}
+          isSubmiting={this.state.isSubmiting}
+          submitFn={this.submit}
+        />
+      </ScrollView>
     )
   }
 }

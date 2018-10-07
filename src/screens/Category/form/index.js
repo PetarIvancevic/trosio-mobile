@@ -3,6 +3,7 @@ import React, {Component} from 'react'
 import {
   Button,
   Picker,
+  ScrollView,
   Text,
   TextInput,
   TouchableOpacity,
@@ -87,14 +88,16 @@ class CategoryParentForm extends Component<Props> {
     }
 
     return (
-      <CategoryForm
-        errors={this.state.errors}
-        data={this.state.data}
-        btnText={categoryId ? 'Update' : 'Create'}
-        formTitle={`${categoryId ? 'Update' : 'Create'} Category`}
-        isSubmiting={this.state.isSubmiting}
-        submitFn={this.submit}
-      />
+      <ScrollView>
+        <CategoryForm
+          errors={this.state.errors}
+          data={this.state.data}
+          btnText={categoryId ? 'Update' : 'Create'}
+          formTitle={`${categoryId ? 'Update' : 'Create'} Category`}
+          isSubmiting={this.state.isSubmiting}
+          submitFn={this.submit}
+        />
+      </ScrollView>
     )
   }
 }

@@ -24,7 +24,13 @@ const styles = StyleSheet.create({
     color: styleVars.color.white,
     textAlign: 'center'
   },
-  spinnerContainer: genericStyles.spinnerContainer
+  spinnerContainer: genericStyles.spinnerContainer,
+  deleteButtonContainer: {
+    backgroundColor: styleVars.color.error,
+    borderRadius: 7,
+    marginTop: '10%',
+    padding: '5%'
+  },
 })
 
 export default styles

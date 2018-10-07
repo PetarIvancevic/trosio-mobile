@@ -11,13 +11,14 @@ import {
 } from 'react-native'
 import PropTypes from 'prop-types'
 
+import CategoryPicker from '../../components/CategoryPicker'
 import consts from '../../consts'
+import DatePickerComponent from '../../components/DatePicker'
 import styles from './styles'
 import styleVars from '../../styles/variables'
 import TextInputComponent from '../../components/TextInput'
-import CategoryPicker from '../../components/CategoryPicker'
 import TouchableContent from '../../components/TouchableContent'
-import DatePickerComponent from '../../components/DatePicker'
+import TransactionTypePicker from '../../components/TransactionTypePicker'
 import WalletPicker from '../../components/WalletPicker'
 
 class TransactionForm extends Component<Props> {
@@ -35,7 +36,8 @@ class TransactionForm extends Component<Props> {
         'date',
         'place'
       ]),
-      walletId: props.walletId || _.get(_.first(props.wallets), 'id')
+      type: _.get(props, 'data.type', 'withdrawal'),
+      walletId: _.get(props, 'data.walletId') || _.get(_.first(props.wallets), 'id')
     }
   }
 
@@ -62,9 +64,15 @@ class TransactionForm extends Component<Props> {
         </View>
 
         <WalletPicker
+          enabled={_.isEmpty(this.props.data)}
           wallets={this.props.wallets}
           updateStateFn={this.updateStateFn('walletId', 'numeric')}
           selectedWallet={this.state.walletId}
+        />
+
+        <TransactionTypePicker
+          updateStateFn={this.updateStateFn('type')}
+          value={this.state.type}
         />
 
         <TextInputComponent
@@ -86,8 +94,8 @@ class TransactionForm extends Component<Props> {
           errorMsg={consts.errors.messages.transaction.place[_.get(this.props.errors, 'place')]}
           inputName='Place'
           placeholder='Where am I spending?'
-          updateStateFn={(comment) => this.setState({comment})}
-          value={this.state.comment}
+          updateStateFn={(place) => this.setState({place})}
+          value={this.state.place}
         />
 
         <TextInputComponent
@@ -120,6 +128,16 @@ class TransactionForm extends Component<Props> {
             </View>
           }
         />
+        {!_.isEmpty(this.props.data) && <TouchableContent
+          onPressFn={this.props.removeFn}
+          content={
+            <View style={styles.deleteButtonContainer}>
+              {isSubmiting
+                ? <ActivityIndicator size={13} color={styleVars.color.white} />
+                : <Text style={styles.buttonStyle}>Remove</Text>}
+            </View>
+          }
+        />}
       </View>
     )
   }

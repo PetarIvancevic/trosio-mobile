@@ -34,8 +34,13 @@ function CategoryPicker ({categories, updateStateFn, selectedCategory}) {
       <Text style={styles.header}>Category:</Text>
       <Picker
         selectedValue={selectedCategory}
+        prompt='Select category'
         onValueChange={updateStateFn}>
         {getPickerItems(categories)}
+        <Picker.Item
+          key={`category000`}
+          label='No category'
+        />
       </Picker>
     </View>
   )
