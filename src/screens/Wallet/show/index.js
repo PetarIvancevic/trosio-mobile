@@ -28,7 +28,7 @@ class WalletShow extends Component<Props> {
     const {navigation} = this.props
     const walletId = navigation.getParam('walletId')
     const {data: wallet} = await fetch.get(`wallet/${walletId}`)
-    const {data: transactions} = await fetch.get(`wallet/${walletId}/transaction`)
+    const {data: transactions} = await fetch.get(`wallet/${walletId}/transaction?limit=10&order=desc`)
 
     await this.setState({
       transactions: transactions || [],

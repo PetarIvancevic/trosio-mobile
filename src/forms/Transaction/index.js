@@ -80,8 +80,8 @@ class TransactionForm extends Component<Props> {
           inputName='Amount'
           placeholder='50'
           keyboardType='numeric'
-          updateStateFn={this.updateStateFn('amount', 'numeric')}
-          value={this.state.amount}
+          updateStateFn={this.updateStateFn('amount')}
+          value={_(this.state).get('amount', '').toString()}
         />
 
         <CategoryPicker

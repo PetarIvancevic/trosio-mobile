@@ -19,7 +19,6 @@ function parseErrors (response) {
     errors = response.error || 'any.default'
   }
 
-  console.log('evo iz utils', errors, respErrors, response)
   return errors
 }
 

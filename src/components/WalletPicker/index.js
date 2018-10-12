@@ -9,7 +9,6 @@ import {
 import styles from './styles'
 
 function getPickerItems (wallets) {
-  console.log(wallets)
   return _.map(wallets, function (wallet, index) {
     return (
       <Picker.Item

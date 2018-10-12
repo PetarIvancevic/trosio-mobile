@@ -66,7 +66,6 @@ class WalletParentForm extends Component<Props> {
       url: 'wallet',
     }
 
-    console.log('pa sta je data', data)
     try {
       const dataObj = {
         name: data.name,
