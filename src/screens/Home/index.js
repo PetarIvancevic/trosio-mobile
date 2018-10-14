@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {Button, Text, TouchableOpacity, View} from 'react-native'
+import {BackHandler, Button, Text, TouchableOpacity, View} from 'react-native'
 
 import fetch from '../../utils/fetch'
 import LoadingScreen from '../LoadingScreen'
@@ -7,16 +7,28 @@ import styles from './styles'
 import TouchableContent from '../../components/TouchableContent'
 
 class Home extends Component<Props> {
-  constructor () {
-    super()
+  constructor (props) {
+    super(props)
 
     this.mainNavigator = this.mainNavigator.bind(this)
+    this.onBackButtonPressAndroid = this.onBackButtonPressAndroid.bind(this)
+    this._didFocusSubscription = this.props.navigation.addListener('didFocus', payload =>
+      BackHandler.addEventListener('hardwareBackPress', this.onBackButtonPressAndroid)
+    )
+  }
+
+  onBackButtonPressAndroid () {
+    const {navigation} = this.props
+    console.log('someone clicked back')
+    console.log(this.state)
+    navigation.navigate('Home')
+    return true
   }
 
   mainNavigator (route) {
     const {navigation} = this.props
 
-    return function () {
+    return () => {
       navigation.navigate(route)
     }
   }
