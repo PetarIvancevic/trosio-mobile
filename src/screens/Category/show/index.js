@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {Button, FlatList, Text, View} from 'react-native'
+import {Button, FlatList, Text, ScrollView, View} from 'react-native'
 
 import fetch from '../../../utils/fetch'
 import LoadingScreen from '../../LoadingScreen'
@@ -91,38 +91,40 @@ class CategoryShow extends Component<Props> {
     }
 
     return (
-      <View style={styles.body}>
-        <Text style={styles.categoryName}>{category.name}</Text>
+      <ScrollView>
+        <View style={styles.body}>
+          <Text style={styles.categoryName}>{category.name}</Text>
 
-        <TouchableContent
-          onPressFn={this.mainNavigator('CategoryParentForm', {categoryId})}
-          content={
-            <View style={styles.buttonContainer}>
-              <Text style={styles.buttonStyle}>Edit</Text>
-            </View>}
-        />
+          <TouchableContent
+            onPressFn={this.mainNavigator('CategoryParentForm', {categoryId})}
+            content={
+              <View style={styles.buttonContainer}>
+                <Text style={styles.buttonStyle}>Edit</Text>
+              </View>}
+          />
 
-        <TouchableContent
-          onPressFn={this.toggleModal}
-          content={
-            <View style={styles.buttonContainer}>
-              <Text style={styles.buttonStyle}>Delete</Text>
-            </View>}
-        />
+          <TouchableContent
+            onPressFn={this.toggleModal}
+            content={
+              <View style={styles.buttonContainer}>
+                <Text style={styles.buttonStyle}>Delete</Text>
+              </View>}
+          />
 
-        <FlatList
-          data={this.state.transactions}
-          renderItem={this.renderItemFn}
-          ListEmptyComponent={this.emptyCategoryList}
-          ListHeaderComponent={this.headerComponent}
-        />
+          <FlatList
+            data={this.state.transactions}
+            renderItem={this.renderItemFn}
+            ListEmptyComponent={this.emptyCategoryList}
+            ListHeaderComponent={this.headerComponent}
+          />
 
-        {this.state.isModalOpen && <ModalComponent
-          message={`Are you sure you want to delete "${category.name}" category`}
-          confirmFn={this.deleteModal}
-          closeModalFn={this.toggleModal}
-        />}
-      </View>
+          {this.state.isModalOpen && <ModalComponent
+            message={`Are you sure you want to delete "${category.name}" category`}
+            confirmFn={this.deleteModal}
+            closeModalFn={this.toggleModal}
+          />}
+        </View>
+      </ScrollView>
     )
   }
 }

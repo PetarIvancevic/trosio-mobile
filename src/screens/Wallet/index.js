@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {ActivityIndicator, Button, FlatList, Text, TouchableOpacity, View} from 'react-native'
+import {ActivityIndicator, Button, FlatList, Text, TouchableOpacity, ScrollView, View} from 'react-native'
 
 import fetch from '../../utils/fetch'
 import styles from './styles'
@@ -73,21 +73,23 @@ class WalletHome extends Component<Props> {
     }
 
     return (
-      <View style={styles.body}>
-        <TouchableContent
-          onPressFn={this.mainNavigator('WalletParentForm')}
-          content={
-            <View style={styles.buttonContainer}>
-              <Text style={styles.buttonStyle}>Add Wallet</Text>
-            </View>}
-        />
-        <FlatList
-          data={this.state.wallets}
-          renderItem={this.renderItemFn}
-          ListEmptyComponent={this.emptyWalletList}
-          ListHeaderComponent={this.headerComponent}
-        />
-      </View>
+      <ScrollView>
+        <View style={styles.body}>
+          <TouchableContent
+            onPressFn={this.mainNavigator('WalletParentForm')}
+            content={
+              <View style={styles.buttonContainer}>
+                <Text style={styles.buttonStyle}>Add Wallet</Text>
+              </View>}
+          />
+          <FlatList
+            data={this.state.wallets}
+            renderItem={this.renderItemFn}
+            ListEmptyComponent={this.emptyWalletList}
+            ListHeaderComponent={this.headerComponent}
+          />
+        </View>
+      </ScrollView>
     )
   }
 }

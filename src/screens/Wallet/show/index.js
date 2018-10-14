@@ -1,5 +1,6 @@
+import _ from 'lodash'
 import React, {Component} from 'react'
-import {Button, FlatList, Text, TouchableOpacity, View} from 'react-native'
+import {Button, ScrollView, FlatList, Text, TouchableOpacity, View} from 'react-native'
 
 import fetch from '../../../utils/fetch'
 import LoadingScreen from '../../LoadingScreen'
@@ -14,9 +15,11 @@ class WalletShow extends Component<Props> {
 
     this.deleteModal = this.deleteModal.bind(this)
     this.mainNavigator = this.mainNavigator.bind(this)
+    this.mapCategory = this.mapCategory.bind(this)
     this.renderItemFn = this.renderItemFn.bind(this)
     this.toggleModal = this.toggleModal.bind(this)
     this.state = {
+      categories: [],
       transactions: [],
       wallet: {},
       isModalOpen: false,
@@ -27,10 +30,12 @@ class WalletShow extends Component<Props> {
   async componentDidMount () {
     const {navigation} = this.props
     const walletId = navigation.getParam('walletId')
+    const {data: categories} = await fetch.get('category')
     const {data: wallet} = await fetch.get(`wallet/${walletId}`)
     const {data: transactions} = await fetch.get(`wallet/${walletId}/transaction?limit=10&order=desc`)
 
     await this.setState({
+      categories,
       transactions: transactions || [],
       wallet,
       fetching: false
@@ -57,6 +62,16 @@ class WalletShow extends Component<Props> {
     return this.setState({isModalOpen: !this.state.isModalOpen})
   }
 
+  mapCategory (categoryId) {
+    const properCategory = _.find(this.state.categories, function (category) {
+      return category.id === categoryId
+    })
+
+    if (!properCategory) return
+
+    return properCategory.name
+  }
+
   renderItemFn (listItem) {
     const transaction = listItem.item
     return (
@@ -69,10 +84,10 @@ class WalletShow extends Component<Props> {
         <View style={styles.transactionListItemContainer}>
           <View style={styles.transactionListItemPlace}>
             <Text style={styles.fullRowText}>
-              kategorija {transaction.categoryId}
+              Category: {this.mapCategory(transaction.categoryId)}
             </Text>
             <Text style={styles.fullRowText}>
-              lokacija {transaction.place}
+              Place: {transaction.place}
             </Text>
           </View>
             <Text style={styles.transactionListItemAmount}>{transaction.amount}</Text>
@@ -110,48 +125,50 @@ class WalletShow extends Component<Props> {
     }
 
     return (
-      <View style={styles.body}>
-        <Text style={styles.walletName}>{wallet.name}</Text>
+      <ScrollView>
+        <View style={styles.body}>
+          <Text style={styles.walletName}>{wallet.name}</Text>
 
-        <TouchableContent
-          onPressFn={this.mainNavigator('WalletParentForm', {walletId})}
-          content={
-            <View style={styles.buttonContainer}>
-              <Text style={styles.buttonStyle}>Edit</Text>
-            </View>}
-        />
+          <TouchableContent
+            onPressFn={this.mainNavigator('WalletParentForm', {walletId})}
+            content={
+              <View style={styles.buttonContainer}>
+                <Text style={styles.buttonStyle}>Edit</Text>
+              </View>}
+          />
 
-        <TouchableContent
-          onPressFn={this.toggleModal}
-          content={
-            <View style={styles.buttonContainer}>
-              <Text style={styles.buttonStyle}>Delete</Text>
-            </View>}
-        />
+          <TouchableContent
+            onPressFn={this.toggleModal}
+            content={
+              <View style={styles.buttonContainer}>
+                <Text style={styles.buttonStyle}>Delete</Text>
+              </View>}
+          />
 
-        <Text>
-          Balance: {wallet.balance}
-        </Text>
-        <Text>
-          Paycheck day: {wallet.paycheckDay}
-        </Text>
-        <Text>
-          Paycheck Amount: {wallet.paycheckAmount}
-        </Text>
+          <Text>
+            Balance: {wallet.balance}
+          </Text>
+          <Text>
+            Paycheck day: {wallet.paycheckDay}
+          </Text>
+          <Text>
+            Paycheck Amount: {wallet.paycheckAmount}
+          </Text>
 
-        <FlatList
-          data={this.state.transactions}
-          renderItem={this.renderItemFn}
-          ListEmptyComponent={this.emptyTransactionList}
-          ListHeaderComponent={this.headerComponent}
-        />
+          <FlatList
+            data={this.state.transactions}
+            renderItem={this.renderItemFn}
+            ListEmptyComponent={this.emptyTransactionList}
+            ListHeaderComponent={this.headerComponent}
+          />
 
-        {this.state.isModalOpen && <ModalComponent
-          message={`Are you sure you want to delete "${wallet.name}" wallet`}
-          confirmFn={this.deleteModal}
-          closeModalFn={this.toggleModal}
-        />}
-      </View>
+          {this.state.isModalOpen && <ModalComponent
+            message={`Are you sure you want to delete "${wallet.name}" wallet`}
+            confirmFn={this.deleteModal}
+            closeModalFn={this.toggleModal}
+          />}
+        </View>
+      </ScrollView>
     )
   }
 }

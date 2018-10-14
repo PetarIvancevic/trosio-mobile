@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {ActivityIndicator, Button, FlatList, Text, TouchableOpacity, View} from 'react-native'
+import {ActivityIndicator, Button, FlatList, Text, TouchableOpacity, ScrollView, View} from 'react-native'
 
 import fetch from '../../utils/fetch'
 import styles from './styles'
@@ -71,21 +71,23 @@ class CategoryHome extends Component<Props> {
     }
 
     return (
-      <View style={styles.body}>
-        <TouchableContent
-          onPressFn={this.mainNavigator('CategoryParentForm')}
-          content={
-            <View style={styles.buttonContainer}>
-              <Text style={styles.buttonStyle}>Add Category</Text>
-            </View>}
-        />
-        <FlatList
-          data={this.state.categories}
-          renderItem={this.renderItemFn}
-          ListEmptyComponent={this.emptyCategoryList}
-          ListHeaderComponent={this.headerComponent}
-        />
-      </View>
+      <ScrollView>
+        <View style={styles.body}>
+          <TouchableContent
+            onPressFn={this.mainNavigator('CategoryParentForm')}
+            content={
+              <View style={styles.buttonContainer}>
+                <Text style={styles.buttonStyle}>Add Category</Text>
+              </View>}
+          />
+          <FlatList
+            data={this.state.categories}
+            renderItem={this.renderItemFn}
+            ListEmptyComponent={this.emptyCategoryList}
+            ListHeaderComponent={this.headerComponent}
+          />
+        </View>
+      </ScrollView>
     )
   }
 }
